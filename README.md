@@ -245,13 +245,3 @@ VITE_API_BASE_URL=http://localhost:8000/api
 5. Open a Pull Request
 
 ---
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-## 📞 Support
-
-If you have any questions or need help, please contact us at [support-email].
