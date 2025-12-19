@@ -1,6 +1,6 @@
 from fastapi import FastAPI
-from app import __version__
 from fastapi.middleware.cors import CORSMiddleware
+from app import __version__
 from app.core.config import settings
 from app.middleware.error_handler import setup_error_handlers
 from app.api.router import api_router
