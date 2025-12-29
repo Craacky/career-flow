@@ -1,6 +1,4 @@
-import datetime
-
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, Index
+from sqlalchemy import Column, Integer, String, Boolean, DateTime, Index, func
 
 from app.db.base import Base
 
@@ -13,8 +11,8 @@ class User(Base):
     hashed_password = Column(String(255), nullable=False)
     fullname = Column(String(255), nullable=False)
     is_active = Column(Boolean, default=True, nullable=False)
-    created_at = Column(DateTime, default=datetime.datetime.now(), nullable=False, index=True)
-    updated_at = Column(DateTime, default=datetime.datetime.now(), nullable=False)
+    created_at = Column(DateTime, server_default=func.now(), nullable=False, index=True)
+    updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now(), nullable=False)
 
     __table_args__ = [
         Index("idx_user_email", "email"),
