@@ -1,6 +1,5 @@
 from sqlalchemy.orm import Session
 
-from app.models import User
 from app.models.user import User
 from app.repositories.base_repository import BaseRepository
 
@@ -18,10 +17,10 @@ class UserRepository(BaseRepository[User]):
                 .offset(skip)
                 .limit(limit)
                 .all()
-                )
+                ) is not None
 
     def get_inactive_users(self) -> list[User]:
-        return self.db.query(User).filter(User.is_active == False).all()
+        return self.db.query(User).filter(User.is_active == False).all() is not None
 
     def email_exists(self, email: str) -> bool:
-        return self.db.query(User).filter(User.email == email).first()
+        return self.db.query(User).filter(User.email == email).first() is not None

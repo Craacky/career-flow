@@ -1,7 +1,5 @@
-from sqlalchemy.orm import Session
 from datetime import datetime, timedelta
-
-from app.models import Subscription
+from sqlalchemy.orm import Session
 from app.repositories.subscription_repository import SubscriptionRepository
 
 

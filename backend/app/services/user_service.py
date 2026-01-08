@@ -1,3 +1,4 @@
+from pydantic import EmailStr
 from sqlalchemy.orm import Session
 from app.models.user import User
 from app.repositories.user_repository import UserRepository
@@ -11,11 +12,10 @@ class UserService:
         self.user_repo = UserRepository(db)
         self.subscription_repo = SubscriptionRepository(db)
 
-    def create_user(self, email: str, password: str, full_name: str | None = None) -> User:
+    def create_user(self, email: EmailStr, password: str, full_name: str | None = None) -> User:
         self._validate_email(email)
         self._validate_password(password)
-
-        if self.user_repo.email_exists(email):
+        if self.user_repo.email_exists(str(email)):
             raise ValueError(f"Email {email} already registered")
         hashed_password = hash_password(password)
 
@@ -35,8 +35,8 @@ class UserService:
 
         return user
 
-    def authenticate_user(self, email: str, password: str) -> User | None:
-        user = self.user_repo.get_by_email(email)
+    def authenticate_user(self, email: EmailStr, password: str) -> User | None:
+        user = self.user_repo.get_by_email(str(email))
 
         if not user:
             return None
@@ -49,7 +49,7 @@ class UserService:
     def get_user(self, user_id: int) -> User | None:
         return self.user_repo.get(user_id)
 
-    def update_user(self, user_id: int, full_name: str | None = None, email: str | None = None) -> User | None:
+    def update_user(self, user_id: int, full_name: str | None = None, email: EmailStr | None = None) -> User | None:
         user = self.user_repo.get(user_id)
         if not user:
             return None
@@ -59,7 +59,7 @@ class UserService:
         if full_name is not None:
             updated_data["full_name"] = full_name
         if email is not None:
-            if email != user.email and self.user_repo.email_exists(email):
+            if email != user.email and self.user_repo.email_exists(str(email)):
                 raise ValueError(f"Email {email} already in use")
             updated_data["email"] = email
         if updated_data:
@@ -67,13 +67,13 @@ class UserService:
         return user
 
     @staticmethod
-    def _validate_email(email: str) -> None:
+    def _validate_email(email: EmailStr) -> None:
         if not email:
             raise ValueError("Email is required")
         if "@" not in email or "." not in email:
             raise ValueError("Invalid email format")
 
-        if len(email) > 255:
+        if len(str(email)) > 255:
             raise ValueError("Email is too long")
 
     @staticmethod
